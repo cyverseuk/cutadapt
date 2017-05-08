@@ -39,12 +39,11 @@
     {"id": "adapter",
     "value": {
       "type": "string",
-      "visible": true,
-      "required": true
+      "visible": true
     },
     "details": {
       "label" : "3' Adapter",
-      "description":"3' adapter sequence. IUPAC wildcard characters are supported. The reverse complement is *not* automatically searched. Adapter matching is error-tolerant. Multiple adapter sequence can be given (space separated), but only the best matching adapter will be removed. ",
+      "description":"3' adapter sequence. IUPAC wildcard characters are supported. The reverse complement is *not* automatically searched. Adapter matching is error-tolerant. Multiple adapter sequence can be given, but only the best matching adapter will be removed. ",
       "showArgument": true,
       "argument": "--adapter=",
       "repeatArgument": true
