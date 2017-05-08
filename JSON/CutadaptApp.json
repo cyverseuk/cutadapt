@@ -1,6 +1,6 @@
 {
   "name": "cutadapt_SE",
-  "label": "cutadapt_SE",
+  "label": "cutadapt SE",
   "shortDescription": "Cutadapt for single reads.",
   "longDescription": "Cutadapt finds and removes adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads.",
   "helpURI": "http://cutadapt.readthedocs.io/en/stable/index.html",
@@ -48,6 +48,9 @@
       "showArgument": true,
       "argument": "--adapter=",
       "repeatArgument": true
+      },
+    "semantics": {
+      "maxCardinality": -1
       }},
     {"id": "front",
     "value": {
@@ -60,6 +63,9 @@
       "showArgument": true,
       "argument": "--front=",
       "repeatArgument": true
+      },
+    "semantics": {
+      "maxCardinality": -1
       }},
     {"id": "anywhere",
       "value": {
@@ -72,6 +78,9 @@
         "showArgument": true,
         "argument": "--anywhere=",
         "repeatArgument": true
+      },
+      "semantics": {
+        "maxCardinality": -1
       }
     },
     {"id": "error-rate",
