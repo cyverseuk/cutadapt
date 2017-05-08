@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-LABEL ubuntu.version="16.04" cutadapt.version="1.13" maintainer="Alice Minotto, @ Earlham Institute"
+LABEL ubuntu.version="16.04" cutadapt.version="1.13" python.version="2.7.12" maintainer="Alice Minotto, @ Earlham Institute"
 
 USER root
 
