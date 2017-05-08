@@ -1,0 +1,422 @@
+{
+  "name": "cutadapt_SE",
+  "label": "cutadapt_SE",
+  "shortDescription": "Cutadapt for single reads.",
+  "longDescription": "Cutadapt finds and removes adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads.",
+  "helpURI": "http://cutadapt.readthedocs.io/en/stable/index.html",
+  "datePublished": "",
+  "author":"Alice Minotto",
+  "version": "1.13.0",
+  "deploymentSystem": "cyverseUK-Storage2",
+  "deploymentPath": "/mnt/data/apps/cutadapt",
+  "executionSystem": "cyverseUK-Batch2",
+  "executionType": "CLI",
+  "parallelism": "SERIAL",
+  "templatePath": "wrapper.sh",
+  "testPath": "test.sh",
+  "ontology": [ "http://edamontology.org/operation_3237",
+    "http://edamontology.org/operation_3192",
+    "http://edamontology.org/operation_2121",
+    "http://edamontology.org/operation_3695"],
+  "tags": [ "CyverseUK" ],
+  "inputs": [
+    {"id": "input_file",
+    "value": {
+      "required": true,
+      "default": ""
+    },
+    "details": { "label": "Input file",
+      "description": "Input may also be in FASTA format. Compressed input and output is supported and auto-detected from the file name (.gz, .xz, .bz2).",
+      "showArgument": false
+    },
+    "semantics": {
+      "maxCardinality": 1
+    }}
+    ],
+
+
+  "parameters": [
+    {"id": "adapter",
+    "value": {
+      "type": "string",
+      "visible": true,
+      "required": true
+    },
+    "details": {
+      "label" : "3' Adapter",
+      "description":"3' adapter sequence. IUPAC wildcard characters are supported. The reverse complement is *not* automatically searched. Adapter matching is error-tolerant. Multiple adapter sequence can be given (space separated), but only the best matching adapter will be removed. ",
+      "showArgument": true,
+      "argument": "--adapter=",
+      "repeatArgument": true
+      }},
+    {"id": "front",
+    "value": {
+      "type": "string",
+      "visible": true
+      },
+    "details": {
+      "label": "5' Adapter",
+      "description": "5' adapter sequence. The adapter and any preciding bases are trimmed. Partial matches at the 5' end are allowed.",
+      "showArgument": true,
+      "argument": "--front=",
+      "repeatArgument": true
+      }},
+    {"id": "anywhere",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "'anywhere' adapter",
+        "description": "Sequence of an adapter that may be ligated to the 5' or 3' end. This option is mostly for rescuing failed library preparations - do not use if you know which end your adapter was ligated to!",
+        "showArgument": true,
+        "argument": "--anywhere=",
+        "repeatArgument": true
+      }
+    },
+    {"id": "error-rate",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "default": 0.1,
+        "validator": "^(0(\\.[0-9]+)?|1)$"
+      },
+      "details": {
+        "label": "Error rate",
+        "description": "Maximum allowed error rate (no. of errors divided by the length of the matching region).",
+        "showArgument": true,
+        "argument": "--error-rate="
+      }
+    },
+    {"id": "no-indels",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "No indels",
+        "description": "Allow only mismatches in alignments. Default is to allow both mismatches and indels.",
+        "showArgument": true,
+        "argument": "--no-indels "
+      }
+    },
+    {"id": "times",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "default": 1,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Times to remove",
+        "description": "Remove up to this number of adapters from each read. Default is 1.",
+        "showArgument": true,
+        "argument": "--times="
+      }
+    },
+    {"id": "overlap",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "default": 3,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Overlap",
+        "description": "If the overlap between the read and the adapter is shorter than this number, the read is not modified. Reduces the no. of bases trimmed due to random mathces. Default is 3.",
+        "showArgument": true,
+        "argument": "--overlap="
+      }
+    },
+    {"id": "match-read-wildcards",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Match read wildcards",
+        "description": "Interpret IUPAC wildcards in reads. Dafult is false.",
+        "showArgument": true,
+        "argument": "--match-read-wildcards "
+      }
+    },
+    {"id": "mask-adapter",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Mask adapter",
+        "description": "Mask adapters with 'N' characters instead of trimming them.",
+        "showArgument": true,
+        "argument": "--mask-adapter "
+      }
+    },
+    {"id": "cutbeginning",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Cut from beginning",
+        "description": "Remove bases from each read from the beginning.",
+        "showArgument": true,
+        "argument": "--cut="
+      }
+    },
+    {"id": "cutend",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^-[0-9]+$"
+      },
+      "details": {
+        "label": "Cut from end (negative numbers)",
+        "description": "Remove bases from each read from the end.",
+        "showArgument": true,
+        "argument": "--cut="
+      }
+    },
+    {"id": "quality-cutoff",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^(\\d+,)?\\d+$"
+      },
+      "details": {
+        "label": "Quality cutoff",
+        "description": "Trim low-quality bases from 5' and/or 3' ends of each read before adapter removal. If one value is given, only the 3' end is trimmed. If two comma-separated cutoffs are given, the 5' end is trimmed with the first cutoff, the 3' end with the second.",
+        "showArgument": true,
+        "argument": "--quality-cutoff="
+      }
+    },
+    {"id": "quality-base",
+      "value": {
+        "type": "enumeration",
+        "visible": true,
+        "enumValues": [
+          "33",
+          "64"
+        ]
+      },
+      "details": {
+        "label": "Quality base",
+        "description": "Assume that quality values in FASTQ are encoded as ascii (quality+quality_base). This needs to be set to 64 for some old Illumina FASTQ files. Default is 33.",
+        "showArgument": true,
+        "argument": "--quality-base="
+      }
+    },
+    {"id": "length",
+      "value": {
+        "type": "number",
+        "visible": true,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Length",
+        "description": "Shorten reads to length. This is applied after adapter trimming.",
+        "showArgument": true,
+        "argument": "--length="
+      }
+    },
+    {"id": "trim-n",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Trim Ns",
+        "description": "Trim N's on ends of reads. Applied after adapter trimming.",
+        "showArgument": true,
+        "argument": "--trim-n "
+      }
+    },
+    {"id": "length-tag",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "Correct length tags",
+        "description": "Search for <string> followed by a decimal number in the description field of the read. Replace the decimal number with the correct length of the trimmed read. USE QUOTES if = is needed!",
+        "showArgument": true,
+        "argument": "--length-tag="
+      }
+    },
+    {"id": "strip-suffix",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "Strip suffix",
+        "description": "Remove this suffix from read names if present.",
+        "showArgument": true,
+        "argument": "--strip-suffix=",
+        "repeatArgument": true
+      },
+      "semantics": {
+        "maxCardinality": -1
+      }
+    },
+    {"id": "prefix",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "Prefix",
+        "description": "Add this prefix to read names. Use {name} to instert the name of the matching adapter.",
+        "showArgument": true,
+        "argument": "--prefix="
+      }
+    },
+    {"id": "suffix",
+      "value": {
+        "type": "string",
+        "visible": true
+      },
+      "details": {
+        "label": "Suffix",
+        "description": "Add this prefix to read names. Use {name} to instert the name of the matching adapter.",
+        "showArgument": true,
+        "argument": "--suffix="
+      }
+    },
+    {"id": "minimum-length",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Minimum length",
+        "description": "Discard trimmed reads that are shorter than this length. Reads that are too short even before adapter removal are also discarded. Default is 0.",
+        "showArgument": true,
+        "argument": "--minimum-length="
+      }
+    },
+    {"id": "maximum-length",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^[0-9]+$"
+      },
+      "details": {
+        "label": "Maximum length",
+        "description": "Discard trimmed reads that are longer than this length.",
+        "showArgument": true,
+        "argument": "--maximum-length="
+      }
+    },
+    {"id": "max-n",
+      "value": {
+        "type": "string",
+        "visible": true,
+        "validator": "^(0\\.[0-9]+|[0-9]+)$"
+      },
+      "details": {
+        "label": "Maximum no. of Ns",
+        "description": "Discard reads with too many N bases. If this is an integer, it is treated as the absolute number of N bases. If it is between 0 and 1, it is treated as the proportion of N's allowed in a read.",
+        "showArgument": true,
+        "argument": "--max-n="
+      }
+    },
+    {"id": "discard-trimmed",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Discard trimmed",
+        "description": "Discard reads that contain an adapter. Also use overlap option to avoid discarding too many randomly matching reads!",
+        "showArgument": true,
+        "argument": "--discard-trimmed "
+      }
+    },
+    {"id": "discard-untrimmed",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Discard untrimmed",
+        "description": "Discard reads that do not contain an adapter.",
+        "showArgument": true,
+        "argument": "--discard-untrimmed "
+      }
+    },
+    {"id": "colorspace",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Colorspace mode",
+        "description": "Enable colorspace mode: also trim the color that is adjacent to the found adapter.",
+        "showArgument": true,
+        "argument": "--colorspace "
+      }
+    },
+    {"id": "double-encode",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Double-encode colors",
+        "showArgument": true,
+        "argument": "--double-encode "
+      }
+    },
+    {"id": "trim-primer",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Trim primer",
+        "description": "Trim primer base and the first color (which is the transition to the first nucleotide)",
+        "showArgument": true,
+        "argument": "--trim-primer "
+      }
+    },
+    {"id": "strip-f3",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Strip F3",
+        "description": "Strip the _F3 suffix of reads names.",
+        "showArgument": true,
+        "argument": "--strip-f3 "
+      }
+    },
+    {"id": "maq-bwa",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "MAQ and BWA compatible output.",
+        "description": "This enables --colorspace, --double-encode, --trim-primer and --suffix='/1'",
+        "showArgument": true,
+        "argument": "--maq "
+      }
+    },
+    {"id": "no-zero-cap",
+      "value": {
+        "type": "flag",
+        "visible": true
+      },
+      "details": {
+        "label": "Don't convert negative qualities to 0",
+        "description": "Default they are since many tools have problems with negative qualities.",
+        "showArgument": true,
+        "argument": "--no-zero-cap "
+      }
+    }
+]
+}
