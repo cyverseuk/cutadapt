@@ -1,0 +1,11 @@
+{
+  "name" : "cutadapt",
+  "appId" : "cutadapt_SE-1.13.0",
+  "archive" : false,
+  "inputs": {
+    "input_file" :  "http://de.cyverse.org/dl/d/6A476DF2-3DED-49DB-97D8-22A7909B2045/1.fastq"
+  },
+  "parameters" : {
+    "adapter": ["ACCTG", "CGGG"]
+  }
+}
